@@ -1,6 +1,14 @@
 # Bundling and request-count strategy
 
-Status: recommendation for discussion, updated 2026-10-20 after the user explicitly highlighted HTTP/1.1. The user suggested dependency/application bundles to reduce HTTP requests; that specific split is not yet an accepted implementation requirement. Prefer fewer bundles and benchmark a combined application first. Validate any code-splitting benefit against actual production builds and the spare ESP32-CAM.
+Status: recommendation for discussion, updated 2026-10-21 with the user's dependency policy and HTTP/1.1 constraint. The user suggested dependency/application bundles to reduce HTTP requests; that specific split is not yet an accepted implementation requirement. Prefer fewer bundles and benchmark a combined application first. Validate any code-splitting benefit against actual production builds and the spare ESP32-CAM.
+
+## Dependency policy
+
+The user explicitly prioritizes bundle size, permits replacing all legacy dependencies with better-fitting approaches, and asks to avoid dependencies where a fairly straightforward implementation suffices. Preact is accepted; the feature inventory below does not preapprove any chart/ZIP/checksum package.
+
+Begin with the exact required behavior and browser APIs/small helpers. For a nontrivial alternative, compare a focused custom implementation with the smallest suitable library, including plugins/transitive code. Record marginal production gzip bytes, request/cache impact, feature completeness, implementation effort and maintenance/correctness implications. Existing minified-library sizes are comparison baselines only; a package being small or familiar is not sufficient justification.
+
+If the tradeoff is unclear, ask the user with the concrete options and measured/estimated cost before selecting/introducing the dependency. Continue work that does not depend on the answer. Do not invent a numerical approval threshold or require reconfirming the accepted stack. Do not omit parity requirements to make either option look better.
 
 ## HTTP/1.1 constraint
 
@@ -55,6 +63,38 @@ Use short content-hashed JS/CSS names, gzip at packaging time, long-lived privat
 An HTTP 304 still involves a request. ETags reduce body bytes for revalidated resources; fresh cached hashed files can avoid network transfer/revalidation during their lifetime. An app/vendor split is therefore a potential update-cache optimization, not an automatic reduction in initial requests. Keep the old-open-app/missing-chunk recovery path even with good cache headers.
 
 Static bundling does not combine `/json`, status/metadata requests or camera images. Keep application request scheduling and polling budgets separate. If small APIs dominate the total, evaluate a focused aggregate endpoint from an actual trace within the permitted firmware scope; do not make the JS bundle larger to solve API traffic.
+
+## Complex features and likely runtime dependencies
+
+Complexity does not necessarily require a library. Source inspection on 2026-10-21 identifies three areas that warrant comparison of custom/native and library approaches beyond the accepted Preact runtime:
+
+| Feature and current source | Complexity to preserve | Dependency direction |
+| --- | --- | --- |
+| History graph: [graph.html](../../sd-card/html/graph.html) | Four series, mixed lines/bars, second Y axis, relative values, visibility, zoom/pan/reset/export interactions | Compare focused Canvas/SVG code with a small suitable chart library; include required interaction/plugin/adapter costs and ask if the tradeoff is unclear |
+| Config backup and CSV archive export: [backup.html](../../sd-card/html/backup.html), [data_export.html](../../sd-card/html/data_export.html) | Multiple binary files/names, ZIP structure, progress/cancel, browser memory and download behavior | Evaluate a bounded writer for the actual archive requirements against a suitable ZIP library; native compression alone does not supply the container, and retaining JSZip is not assumed |
+| OTA checksum: [ota_page.html](../../sd-card/html/ota_page.html) | Compute browser MD5 over upload bytes and compare to firmware digest before installation | A small tested implementation is needed for the existing protocol; this does not automatically require a new npm package or crypto suite |
+
+Re-measured existing assets with Python gzip level 9, `mtime=0`: Plotly Basic 327,442 bytes (319.77 KiB), JSZip 28,530 bytes (27.86 KiB), MD5 3,494 bytes (3.41 KiB). These are current input-library estimates, not sizes for selected replacements or the future app. The checksum is small enough to compare inside the app bundle; it is not automatically worth an extra HTTP/1.1 request. Chart/archive code are much stronger split candidates.
+
+Web Crypto's digest algorithms include SHA-1/SHA-256/SHA-384/SHA-512 rather than MD5, and `crypto.subtle` has secure-context restrictions: [Web Cryptography specification](https://www.w3.org/TR/webcrypto/). Do not assume switching to SHA-256 removes a JS dependency on ordinary HTTP device origins; algorithm changes need firmware compatibility and browser-origin support. This is checksum protocol compatibility, not a new cryptographic-authentication project.
+
+The browser [Compression Standard](https://compression.spec.whatwg.org/) defines stream compression rather than a multi-file ZIP writer. ZIP headers/directories, filenames and checksums still need implementation. Determine the actual required archive subset and compare the effort/bytes of a focused tested writer with a suitable package; ask if the choice is unclear. The existing code's JSZip use generates a browser Blob; see [JSZip's generation API](https://stuk.github.io/jszip/documentation/api_jszip/generate_async.html). Legacy restore uploads individual files, so ZIP extraction/restoration is not required by parity. OTA ZIP extraction is firmware work, not a frontend archive parser requirement.
+
+Other complex areas can stay small and application-owned:
+
+| Feature | Why it is complex | Recommended baseline |
+| --- | --- | --- |
+| Reference/alignment/digit/analog editors | Source-pixel transforms, fitted/zoomed image, touch/keyboard interaction, ROI ordering/spacing/synchronization and persistence | Canvas or SVG plus Pointer Events and tested shared geometry; no general image-editor/scene-graph library initially |
+| Structured/raw configuration | Commented sections/options, per-sequence settings, ROI rows, unknown-line preservation and recoverable writes | Custom lossless parser/patcher plus Preact/native forms; a generic INI parser or large form framework does not solve these device-specific rules |
+| History CSV parsing | Dates, empty/invalid readings, trailing diagnostics and legacy variants | Focused parser for verified firmware output; evaluate a CSV library only if actual standard quoting/escaping/streaming needs justify it. The current writer concatenates fields, so a generic parser cannot reconstruct delimiters the producer failed to escape |
+| File manager and downloads | Inert HTML-list extraction, paths, serial transfers, overwrite/recovery and cancellation | DOMParser, fetch/XHR, Blob/object URLs and download links; test target browser behavior before removing FileSaver |
+| Setup/OTA/reconnect workflows | Async steps, pauses/exclusive operations, failures and recovery | Typed application state machines; no workflow/state-machine package required initially |
+| Logs, date display, navigation and notifications | Formatting/filtering, device-vs-browser time, focus/accessibility and UI state | Preact, native controls, Intl and small helpers; no jQuery, date suite, data-grid or widget framework by default |
+| Parameter help | Existing Markdown converted to help during packaging | Build-time conversion/compact metadata; no browser Markdown/highlighting dependency needed for parity |
+
+Model inference, image alignment/cropping operations and integration publishing remain in firmware. The frontend does not need TensorFlow.js, OpenCV.js, a browser MQTT client or a video-player framework to replace their existing UI controls. The camera stream is an existing multipart JPEG endpoint; preserve its blocking/session behavior using native image display and teardown.
+
+Evaluate any new dependency by required features, native/custom alternatives, marginal production gzip bytes including plugins/adapters, import graph/request cost, maintenance/license compatibility and behavior on ordinary HTTP. Development/build/test packages are not necessarily shipped runtime dependencies; inspect the production output. Apply the user's ask-if-uncertain rule before resolving an unclear tradeoff. No new package is selected or installed by this inventory.
 
 ## Measurement and decision gate
 

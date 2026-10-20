@@ -1,7 +1,7 @@
 # Alternative SD-card UI plan
 
 Planning date: 2026-10-20. Source baseline: `cdc8450924e9338ab564c3fd76ad998e7b7cbb84`.
-Status: repository analysis and agreed direction; implementation has not started. Updated with user preferences on 2026-10-20.
+Status: repository analysis and agreed direction; implementation has not started. Updated with user preferences through 2026-10-21.
 
 ## Agreed requirements
 
@@ -11,6 +11,7 @@ Status: repository analysis and agreed direction; implementation has not started
 - **Full feature parity is required before the alternative is considered usable.** The user selected this scope explicitly. Intermediate stages are development checkpoints, not reduced-scope releases.
 - Document the context and divide implementation into separate prompts that can run in fresh conversations.
 - Use Preact + TypeScript + Vite and target modern devices/browsers.
+- Minimize runtime dependencies and prioritize bundle size. Implement fairly straightforward features with browser APIs/small helpers; existing libraries are comparison baselines, not required choices. Ask the user when a dependency tradeoff is unclear, with concrete alternatives and measured cost.
 - Start with a simple visual facelift and responsive layout while preserving familiar workflows. Broader page redesign follows the user's later review.
 - Keep the project primarily frontend, with focused firmware changes or added endpoints where needed. ETag support and improved cache policy, including `no-cache` revalidation, are required work.
 - A spare ESP32-CAM is available for validation; connection details and actual test results are still pending.
@@ -28,7 +29,7 @@ Status: repository analysis and agreed direction; implementation has not started
 | [06-work-plan.md](06-work-plan.md) | Ordered implementation stages and exit criteria |
 | [07-decisions-and-progress.md](07-decisions-and-progress.md) | Accepted requirements, proposals, open questions, handoff state |
 | [08-cache-and-firmware-support.md](08-cache-and-firmware-support.md) | ETags, cache policy, conditional requests and focused API extensions |
-| [09-bundling.md](09-bundling.md) | Initial request budget, coarse feature bundles, vendor split tradeoffs and measurements |
+| [09-bundling.md](09-bundling.md) | HTTP/1.1 bundle tradeoffs, complex-feature dependency inventory and measurements |
 
 ## Agreed direction and proposed deployment
 
@@ -39,7 +40,7 @@ The ESP32 serves files and its existing APIs; the user's browser runs the applic
 
 The user accepted Preact + TypeScript + Vite. The first stage verifies contracts, selects compatible tool versions and records browser targets; it does not reopen the framework choice. Deployment paths and chunk boundaries remain implementation details to verify.
 
-Main opportunities: remove jQuery from the new UI, replace the large chart dependency with a measured alternative, load specialist tools only when opened, reuse `/json`, and avoid unnecessary image/configuration downloads. Preserve all legacy workflows through native alternative screens; legacy links are useful during development and recovery but do not count as parity.
+Main opportunities: remove jQuery from the new UI, replace the large chart implementation with a better-fitting library or focused custom code after checking full parity, isolate any necessary heavy tools, reuse `/json`, and avoid unnecessary image/configuration downloads. Preserve all legacy workflows through native alternative screens; legacy links are useful during development and recovery but do not count as parity.
 
 For the HTTP/1.1 firmware, benchmark one combined application JS file including Preact/dependencies plus one compact stylesheet first: three initial static requests. Keep ordinary navigation bundled; consider extra chunks only for substantial chart/archive or other measured heavy code. Compare byte savings, request/waterfall cost and vendor/app update-cache reuse before finalizing. See document 09; the exact chunk layout remains a proposal.
 

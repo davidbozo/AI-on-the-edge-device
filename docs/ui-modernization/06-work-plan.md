@@ -30,7 +30,7 @@ Every stage:
 2. Work within the stage and fix issues necessary for its deliverable. Necessary small compatible firmware/API changes are authorized; record their contracts, tests and resource impact rather than requesting approval again solely because firmware is involved. Broad backend/product redesign remains outside scope.
 3. Run appropriate build/contract/browser checks. Hardware operations are separate from a mock test; report exact evidence and pending work.
 4. Update feature statuses without treating fallback links or mocks as device verification.
-5. Add a stage handoff under `docs/ui-modernization/handoffs/NN-*.md`, containing changed files, contract decisions, commands/results, measured bundle sizes, limitations, device checks and the precise next step.
+5. Add a stage handoff under `docs/ui-modernization/handoffs/NN-*.md`, containing changed files, contract and runtime-dependency decisions (native/custom alternatives, feature fit and measured cost), commands/results, bundle sizes, limitations, device checks and the precise next step. Ask the user before resolving an unclear dependency tradeoff; routine straightforward native work can continue.
 6. Update [07-decisions-and-progress.md](07-decisions-and-progress.md), linking that handoff. Leave the working tree reviewable. Do not create commits/PRs/pushes unless separately requested.
 
 ## Decision points

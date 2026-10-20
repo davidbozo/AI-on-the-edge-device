@@ -17,9 +17,15 @@ Measured locally on 2026-10-20 at source baseline `cdc8450924e9338ab564c3fd76ad9
 | `firework.css` | 741 | 346 |
 | `plotly-basic-2.18.2.min.js` | 976,530 | 327,442 |
 | `jszip.min.js` | 97,642 | 28,530 |
+| `md5.min.js` | 10,550 | 3,494 |
+| `FileSaver.min.js` | 2,738 | 1,300 |
 | `edit_config_template.html` | 150,683 | 17,449 |
 | `mkdocs_theme.css` | 145,209 | 20,668 |
 | `edit_reference.html` | 56,158 | 8,856 |
+
+MD5/FileSaver rows were added from a repeat measurement on 2026-10-21 using the same gzip settings; repeated chart/ZIP/jQuery measurements matched the original values. See document 09 for which complex features actually merit runtime libraries.
+
+These existing-library measurements are baselines only. The user prefers straightforward native/custom implementations and better-fitting replacements over carrying legacy packages. Measure marginal production cost of each proposed dependency, including transitive/plugin code and request impact; ask the user when the tradeoff is unclear. Being below a size target alone does not justify adding a package.
 
 There are 63 files under `sd-card/html`, totaling 2,219,730 bytes; 30 top-level HTML inputs and 113 Markdown parameter pages. These counts include source templates and an existing gzip asset; they are not the packaged transfer size. Tooltips expand generated configuration/reference HTML, so their source gzip sizes understate release page size.
 

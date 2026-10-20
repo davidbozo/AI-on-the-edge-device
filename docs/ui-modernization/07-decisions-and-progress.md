@@ -1,6 +1,6 @@
 # Decisions, open questions and progress
 
-Last updated: 2026-10-20. Planning baseline: `cdc8450924e9338ab564c3fd76ad998e7b7cbb84`.
+Last updated: 2026-10-21. Planning baseline: `cdc8450924e9338ab564c3fd76ad998e7b7cbb84`.
 
 ## Accepted requirements
 
@@ -19,6 +19,8 @@ Last updated: 2026-10-20. Planning baseline: `cdc8450924e9338ab564c3fd76ad998e7b
 | D11 | Start simple with an overall facelift and familiar workflows | User answers 5 and 6 |
 | D12 | Defer broader page reimagining to the user's later review | User answer 6; not a first-pass deliverable |
 | D13 | Treat firmware HTTP/1.1 as an explicit bundling/performance constraint | User clarification; measure request count/waterfalls alongside transferred bytes |
+| D14 | Minimize dependencies, especially shipped bundle cost; implement fairly straightforward behavior directly; choose better-fitting replacements freely | User dependency instruction; legacy dependencies are not requirements |
+| D15 | Ask the user when a dependency choice is uncertain | Present actual feature needs, native/custom/library options and measured production cost before deciding |
 
 ## Proposed defaults, not yet confirmed
 
@@ -35,7 +37,7 @@ Former P01/P04 are resolved by D06/D07. Former P05 is superseded by D09/D10: cac
 
 ## Open discussion points
 
-No further product clarification is needed to finish the plan. Resolve these practical details when their stage needs them; routine implementation choices can proceed within D01-D13.
+No further product clarification is needed to finish the plan. Resolve practical details when their stage needs them; routine implementation choices can proceed within D01-D15. Unclear dependency tradeoffs must be brought to the user before selecting/introducing the package; this is not a blanket requirement to reconfirm the already accepted stack.
 
 - Record the spare board/camera/SD/firmware details, device address and how sanitized fixtures/performance measurements will be collected before hardware tests.
 - Select concrete modern-browser minimum versions and compatible development tool versions in stage 00.
@@ -53,6 +55,8 @@ No further product clarification is needed to finish the plan. Resolve these pra
 - Recorded all six user answers, added the cache/API-support design and dedicated stage 00b; this is a planning revision only.
 - Added bundling analysis after the user's dependency/app split question; request-count goals and implementation comparisons are documented, with the exact chunk layout still proposed.
 - Revised the bundle benchmark order after the user's HTTP/1.1 clarification: a combined application first, optional heavy-library splits next, broader feature splits only with evidence.
+- Added document 09's complex-feature dependency inventory and repeated existing-library gzip measurements on 2026-10-21: charting/ZIP/checksum are the strongest candidates; calibration/configuration/workflows primarily need application-specific code and browser APIs. No replacement packages are selected or installed.
+- Recorded the user's dependency policy and revised library-leaning recommendations: compare native/focused custom implementations first where straightforward, evaluate better-fitting replacements, and ask with evidence if uncertain. The feature inventory does not preapprove chart, ZIP or MD5 packages.
 - No device URL/connection or runtime capture was provided. No firmware build, browser/device test, OTA, write endpoint or deployment was performed.
 - Alternative UI implementation, dependency installation and firmware changes have **not** started.
 

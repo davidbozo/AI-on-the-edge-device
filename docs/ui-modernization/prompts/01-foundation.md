@@ -5,6 +5,8 @@ Execute stage 01 of docs/ui-modernization/06-work-plan.md. Read prompts/README.m
 
 Create an isolated frontend source project (web-ui/ unless superseded). Add a production build, lockfile, documented development commands and fixture preview. Keep dependencies small and locally bundled. Do not rewrite legacy files or change firmware/CI/default routing in this stage.
 
+Preact/TypeScript/Vite is already accepted. Keep added runtime packages minimal: use browser APIs/small helpers for straightforward work, assess actual marginal production cost and feature fit for anything else, and ask the user with concrete alternatives if the tradeoff is unclear. No router/widget/state/query package is implied by scaffolding.
+
 Build a simple responsive, accessible navigation shell with familiar legacy page purposes, labels/actions and workflow order, hash routes, back/forward handling, a visible legacy-root recovery link and explicit unimplemented-screen labels. Use native Preact, system fonts and small local CSS. Avoid broader navigation/page reimagining, elaborate visual effects or a mandatory theme system; the user will review redesigns later. Namespace preferences; do not use the legacy page cookie. Keep static entry/recovery text useful if JS fails.
 
 Generate relative assets for /ui/index.html, short hashed .js/.css filenames, no unsupported MIME-dependent files or runtime external URLs. Emit a raw/gzip/initial-request report and path checks. Keep entry request fan-out small; inspect generated preload behavior. Do not gzip the source tree or copy output over sd-card/html.
