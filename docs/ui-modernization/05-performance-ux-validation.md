@@ -47,6 +47,37 @@ for name in ['index.html', 'overview.html', 'jquery-3.6.0.min.js',
 
 Stage 00 should record a release-generated baseline when tooling is available, with its commands/tool versions. Do not run the current tooltip generator over a working source tree casually: it writes source files and uses shell `cp`.
 
+## Early CLI analysis: required in stage 01
+
+The user requests bundle analysis fairly early. Make it available with the first foundation build, before feature packages are introduced, and rerun it for feature/dependency changes. This is tooling to implement in stage 01; the commands below do not exist yet and no analyzer is installed by this planning revision.
+
+Recommended minimal setup:
+
+| Proposed command | Purpose | Implementation direction |
+| --- | --- | --- |
+| `npm run build` | Normal production build with per-file compressed-size output | Keep Vite's built-in `build.reportCompressedSize` enabled |
+| `npm run size` | Production build plus console/JSON report of raw/gzip sizes, initial graph, optional code and static-request estimate | Small Node script using built-in `fs`/`zlib` and Vite manifest/output metadata; no extra size-only runtime/package dependency needed |
+| `npm run analyze` | Equivalent production build with a module/dependency treemap and optional import-network report | Proposed dev-only `rollup-plugin-visualizer`, conditionally enabled; write reports outside deployable output |
+| `npm run size -- --check` | Check configured byte/request budgets and report a nonzero exit status for enforced limits | Reuse the small reporter; distinguish provisional warning targets from limits actually chosen for enforcement |
+
+Vite documents its [gzip-size reporting option](https://vite.dev/config/build-options.html#build-reportcompressedsize). The [visualizer's official documentation](https://github.com/btd/rollup-plugin-visualizer) provides Vite/Rolldown integration, module-size views and optional gzip attribution. Verify and lock versions compatible with the chosen Vite/toolchain during stage 01. Its standalone CLI consumes generated stats; it does not reconstruct a module graph simply by pointing at a minified `dist` file. Trigger analysis through the build integration.
+
+The visualizer is a development/build dependency, never imported by application code. Generate reports under a separate ignored directory such as `web-ui/reports/`, outside `dist/` and SD staging, and exclude reports/stats/manifests/source maps used only for diagnostics from release archives. Use the same production transforms/minification/target as the normal build. Avoid automatically opening a browser in CLI/CI. If sourcemaps are needed for more accurate attribution, keep them local and confirm the shipped JS remains equivalent.
+
+The reporter should include:
+
+- Per-file raw and gzip bytes; record compression settings and use exact packaged `.gz` sizes when available, rather than compressing `.gz` a second time.
+- Initial HTML/JS/CSS/static asset graph with deduplicated imported chunks/preloads and estimated cold static request count. List dynamic code separately; all prerequisite shared JS/CSS count toward a first feature visit.
+- All-application total, largest chunks and comparison to the saved foundation/previous report, including absolute byte growth and new static assets/requests. Match logical entries/features when hashed names change.
+- Relevant build IDs/tool versions and budget/check results in machine-readable JSON plus readable CLI output. Keep a small reviewed baseline/summary distinct from ignored bulky generated reports.
+- Separate static asset estimates from API/image traffic and actual latency. Browser waterfalls and device runs remain necessary for HTTP/1.1 connection behavior, cache reuse and full-page totals.
+
+Use the treemap to locate contributors, and the final emitted/compressed files as the size authority: per-module gzip estimates are not additive and do not equal final compressed bundle sizes. Compare before/after production builds to determine a dependency's marginal cost, including transitive modules/plugins and changed shared chunks. Small distribution size alone does not replace the dependency policy in document 09.
+
+`size-limit` with `@size-limit/file` is an alternative if budget management outgrows the small script. Its [official docs](https://github.com/ai/size-limit) support file-size limits with gzip; its default compression differs from this device's gzip target, so configure explicitly and measure existing built output rather than rebuilding through another preset. Do not install overlapping analysis/gating toolchains by default. The custom reporter plus one useful module visualizer is the initial recommendation, subject to the user's dependency policy for any unclear tool choice.
+
+Stage 01 records the first real output baseline; each substantive feature/dependency change records the delta. Stage 12 connects the same CLI check to CI and publishes diagnostic artifacts separately from firmware/SD packages. Keep proposed budgets visible from the start and document any deliberate adjustment; do not silently raise them to pass a check.
+
 ## Proposed budgets to validate
 
 Targets, not measured achievements or promises:

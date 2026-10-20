@@ -98,6 +98,8 @@ Evaluate any new dependency by required features, native/custom alternatives, ma
 
 ## Measurement and decision gate
 
+Provide the CLI workflow in [document 05](05-performance-ux-validation.md#early-cli-analysis-required-in-stage-01) with the first foundation build: normal Vite compressed-size reporting, a small built-in-Node size/request reporter and a proposed dev-only module visualizer. Record a real baseline before specialist dependency choices. Generated diagnostics remain outside deployed assets; use emitted gzip files for totals and module views for attribution.
+
 Compare these production variants when representative code exists:
 
 | Variant | Main benefit to measure | Cost to measure |

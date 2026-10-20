@@ -21,6 +21,7 @@ Last updated: 2026-10-21. Planning baseline: `cdc8450924e9338ab564c3fd76ad998e7b
 | D13 | Treat firmware HTTP/1.1 as an explicit bundling/performance constraint | User clarification; measure request count/waterfalls alongside transferred bytes |
 | D14 | Minimize dependencies, especially shipped bundle cost; implement fairly straightforward behavior directly; choose better-fitting replacements freely | User dependency instruction; legacy dependencies are not requirements |
 | D15 | Ask the user when a dependency choice is uncertain | Present actual feature needs, native/custom/library options and measured production cost before deciding |
+| D16 | Provide bundle-size CLI analysis early, with the foundation build | User request; measure sizes/contributors and changes before adding feature dependencies |
 
 ## Proposed defaults, not yet confirmed
 
@@ -32,12 +33,13 @@ Last updated: 2026-10-21. Planning baseline: `cdc8450924e9338ab564c3fd76ad998e7b
 | P07 | No legacy menu edit initially; direct alternative URL | Keeps current UI untouched; optional discoverability link later |
 | P08 | Conservative byte budgets, <=2 ordinary app reads and exclusive stream/write modes | Firmware sockets and blocking stream; tune with device evidence |
 | P09 | Benchmark one combined app including Preact/dependencies plus one CSS first; split only measured substantial specialist code | Revised for HTTP/1.1: prefer three initial static requests, zero code requests for ordinary navigation; compare heavy-library splits/vendor-app cache tradeoffs in document 09 |
+| P10 | Built-in Vite gzip reporting + small Node size/budget CLI + dev-only rollup-plugin-visualizer | Document 05: repeatable exact-output metrics and module attribution, no added runtime code; verify locked-version compatibility in 01, wire CI in 12 |
 
 Former P01/P04 are resolved by D06/D07. Former P05 is superseded by D09/D10: caching firmware work is required, and focused supporting changes may be implemented as needed. The accepted direction does not authorize deployment or flashing an unspecified device.
 
 ## Open discussion points
 
-No further product clarification is needed to finish the plan. Resolve practical details when their stage needs them; routine implementation choices can proceed within D01-D15. Unclear dependency tradeoffs must be brought to the user before selecting/introducing the package; this is not a blanket requirement to reconfirm the already accepted stack.
+No further product clarification is needed to finish the plan. Resolve practical details when their stage needs them; routine implementation choices can proceed within D01-D16. Unclear dependency tradeoffs must be brought to the user before selecting/introducing the package; this is not a blanket requirement to reconfirm the already accepted stack.
 
 - Record the spare board/camera/SD/firmware details, device address and how sanitized fixtures/performance measurements will be collected before hardware tests.
 - Select concrete modern-browser minimum versions and compatible development tool versions in stage 00.
@@ -57,6 +59,7 @@ No further product clarification is needed to finish the plan. Resolve practical
 - Revised the bundle benchmark order after the user's HTTP/1.1 clarification: a combined application first, optional heavy-library splits next, broader feature splits only with evidence.
 - Added document 09's complex-feature dependency inventory and repeated existing-library gzip measurements on 2026-10-21: charting/ZIP/checksum are the strongest candidates; calibration/configuration/workflows primarily need application-specific code and browser APIs. No replacement packages are selected or installed.
 - Recorded the user's dependency policy and revised library-leaning recommendations: compare native/focused custom implementations first where straightforward, evaluate better-fitting replacements, and ask with evidence if uncertain. The feature inventory does not preapprove chart, ZIP or MD5 packages.
+- Added the user's early CLI analysis requirement to stage 01, proposing built-in Vite gzip output, a small Node reporter/checker and development-only module visualization. Commands are planned; no analyzer or frontend toolchain has been installed/run.
 - No device URL/connection or runtime capture was provided. No firmware build, browser/device test, OTA, write endpoint or deployment was performed.
 - Alternative UI implementation, dependency installation and firmware changes have **not** started.
 
