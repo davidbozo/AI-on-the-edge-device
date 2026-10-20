@@ -28,6 +28,7 @@ Status: repository analysis and agreed direction; implementation has not started
 | [06-work-plan.md](06-work-plan.md) | Ordered implementation stages and exit criteria |
 | [07-decisions-and-progress.md](07-decisions-and-progress.md) | Accepted requirements, proposals, open questions, handoff state |
 | [08-cache-and-firmware-support.md](08-cache-and-firmware-support.md) | ETags, cache policy, conditional requests and focused API extensions |
+| [09-bundling.md](09-bundling.md) | Initial request budget, coarse feature bundles, vendor split tradeoffs and measurements |
 
 ## Agreed direction and proposed deployment
 
@@ -39,6 +40,8 @@ The ESP32 serves files and its existing APIs; the user's browser runs the applic
 The user accepted Preact + TypeScript + Vite. The first stage verifies contracts, selects compatible tool versions and records browser targets; it does not reopen the framework choice. Deployment paths and chunk boundaries remain implementation details to verify.
 
 Main opportunities: remove jQuery from the new UI, replace the large chart dependency with a measured alternative, load specialist tools only when opened, reuse `/json`, and avoid unnecessary image/configuration downloads. Preserve all legacy workflows through native alternative screens; legacy links are useful during development and recovery but do not count as parity.
+
+For the HTTP/1.1 firmware, benchmark one combined application JS file including Preact/dependencies plus one compact stylesheet first: three initial static requests. Keep ordinary navigation bundled; consider extra chunks only for substantial chart/archive or other measured heavy code. Compare byte savings, request/waterfall cost and vendor/app update-cache reuse before finalizing. See document 09; the exact chunk layout remains a proposal.
 
 Improve firmware caching early through the dedicated stage 00b: HTML and mutable static files revalidate with ETags; hashed assets can use long-lived caching. Preserve the legacy interface/default URLs while testing intentional cache-header changes on both UIs. Necessary small API additions are within scope and must preserve existing clients; the frontend must not assume an endpoint exists before it is implemented.
 

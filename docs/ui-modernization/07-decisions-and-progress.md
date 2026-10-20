@@ -18,6 +18,7 @@ Last updated: 2026-10-20. Planning baseline: `cdc8450924e9338ab564c3fd76ad998e7b
 | D10 | Improve caching with ETags and `no-cache` revalidation | Explicit caching requirement in answer 4; stage 00b |
 | D11 | Start simple with an overall facelift and familiar workflows | User answers 5 and 6 |
 | D12 | Defer broader page reimagining to the user's later review | User answer 6; not a first-pass deliverable |
+| D13 | Treat firmware HTTP/1.1 as an explicit bundling/performance constraint | User clarification; measure request count/waterfalls alongside transferred bytes |
 
 ## Proposed defaults, not yet confirmed
 
@@ -28,12 +29,13 @@ Last updated: 2026-10-20. Planning baseline: `cdc8450924e9338ab564c3fd76ad998e7b
 | P06 | SD wizard fully replaced; embedded AP provisioning and USB webinstaller preserved | Those are separate firmware/USB surfaces; revisit only if requested |
 | P07 | No legacy menu edit initially; direct alternative URL | Keeps current UI untouched; optional discoverability link later |
 | P08 | Conservative byte budgets, <=2 ordinary app reads and exclusive stream/write modes | Firmware sockets and blocking stream; tune with device evidence |
+| P09 | Benchmark one combined app including Preact/dependencies plus one CSS first; split only measured substantial specialist code | Revised for HTTP/1.1: prefer three initial static requests, zero code requests for ordinary navigation; compare heavy-library splits/vendor-app cache tradeoffs in document 09 |
 
 Former P01/P04 are resolved by D06/D07. Former P05 is superseded by D09/D10: caching firmware work is required, and focused supporting changes may be implemented as needed. The accepted direction does not authorize deployment or flashing an unspecified device.
 
 ## Open discussion points
 
-No further product clarification is needed to finish the plan. Resolve these practical details when their stage needs them; routine implementation choices can proceed within D01-D12.
+No further product clarification is needed to finish the plan. Resolve these practical details when their stage needs them; routine implementation choices can proceed within D01-D13.
 
 - Record the spare board/camera/SD/firmware details, device address and how sanitized fixtures/performance measurements will be collected before hardware tests.
 - Select concrete modern-browser minimum versions and compatible development tool versions in stage 00.
@@ -49,6 +51,8 @@ No further product clarification is needed to finish the plan. Resolve these pra
 - Checked official Preact/Vite documentation for build/routing proposals; links in document 04.
 - Planning documents and numbered prompts are validated for local links, balanced code fences and trailing whitespace after revisions.
 - Recorded all six user answers, added the cache/API-support design and dedicated stage 00b; this is a planning revision only.
+- Added bundling analysis after the user's dependency/app split question; request-count goals and implementation comparisons are documented, with the exact chunk layout still proposed.
+- Revised the bundle benchmark order after the user's HTTP/1.1 clarification: a combined application first, optional heavy-library splits next, broader feature splits only with evidence.
 - No device URL/connection or runtime capture was provided. No firmware build, browser/device test, OTA, write endpoint or deployment was performed.
 - Alternative UI implementation, dependency installation and firmware changes have **not** started.
 
@@ -56,7 +60,7 @@ No further product clarification is needed to finish the plan. Resolve these pra
 
 | Stage | State | Handoff / evidence |
 | --- | --- | --- |
-| Planning | complete | Documents 01-08 and 15 implementation prompts (00,00b,01-13); agreed direction and source analysis only |
+| Planning | complete | Documents 01-09 and 15 implementation prompts (00,00b,01-13); agreed direction, proposed bundling and source analysis only |
 | 00 Contracts/baseline | not started | Next implementation prompt; stack/scope/preferences settled |
 | 00b Firmware cache/API support | not started | Required ETag/cache work; compatible API additions as needed |
 | 01 Foundation | not started | — |

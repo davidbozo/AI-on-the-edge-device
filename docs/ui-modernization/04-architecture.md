@@ -65,7 +65,9 @@ Build first into `web-ui/dist`; copy output into the release staging `html/ui` d
 
 ## Loading and state
 
-The entry loads one small common application JS bundle and shared CSS. Dashboard logic stays small. Group specialist screens into a few lazy units: history/chart, config/metadata/help, camera/calibration/ROIs, file/archive tools and maintenance. Refine grouping with measured bytes/request counts; avoid dozens of microchunks.
+The firmware uses HTTP/1.1: start with one combined application JS bundle including Preact/dependencies and one compact external stylesheet, targeting three initial static requests including HTML. Merge small screens/helpers so ordinary navigation needs no further code requests. Compare one complete app against splitting only substantial specialist code, especially chart/archive libraries. Broader configuration/calibration splits need measured benefits; functional areas are not automatic output chunks. Justify shared chunks or extra CSS requests against request/waterfall cost.
+
+See [09-bundling.md](09-bundling.md) for HTTP/1.1 connection/serialization considerations and benchmark variants. A vendor/app split can improve reuse across updates but adds an initial asset request; a blanket dependency chunk can pull chart/archive code into initial load. Keep the runtime and app together initially. Exact grouping and any initial-byte-budget tradeoff remain subject to measurement, not accepted fixed requirements.
 
 Store readings, device metadata and configuration at the appropriate application lifetime. Load config on entering a workflow that needs it, not merely to render navigation. Fetch `/sysinfo` once for common metadata. Use `/json` for readings, plus `/statusflow` and occasional round/health information; do not pretend `/json` includes every legacy field.
 

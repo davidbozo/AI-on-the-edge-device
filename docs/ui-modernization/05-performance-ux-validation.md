@@ -49,8 +49,9 @@ Targets, not measured achievements or promises:
 | --- | --- | --- |
 | Cold dashboard application transfer | <= 30 KiB gzip | Entry + required JS + CSS, excluding camera images/API/header bytes |
 | Initial JS / CSS / HTML | <= 24 / 5 / 1 KiB gzip | Sub-budgets totaling the 30 KiB target |
-| Initial static requests | <= 4 | Entry, main JS, CSS, optional small icon; inspect module preload requests |
+| Initial static requests | Prefer 3, <= 4 | Entry, main JS including Preact, one CSS, optional small icon; count module preloads/shared imports too |
 | Lazy feature group | Aim <= 45 KiB incremental gzip | All additional code/CSS for one group; justify measured exceptions |
+| Navigation code requests | Prefer 0 for ordinary screens, 1 for justified heavy tools | HTTP/1.1: count every prerequisite/shared chunk and extra CSS/help request; more need explicit measurement |
 | All alternative application code/CSS/HTML | Aim <= 256 KiB gzip | Includes chart/ZIP/digest dependencies; report help/images separately |
 | Concurrent app fetches | <= 2 ordinary reads; 1 write workflow | Browser chunks/images and other clients also consume server capacity |
 | Hidden tab polling | 0 periodic requests after settling | Suspend timers and discard/cancel obsolete reads |
@@ -58,6 +59,8 @@ Targets, not measured achievements or promises:
 | Mutations automatically retried | 0 | Readback/recovery required for uncertain outcomes |
 
 If full parity requires a larger specialist module, record the reason and measure before accepting a changed budget. Reducing initial load must not hide required features. Size targets exclude content images because those depend on camera/quality; **also report a complete cold-page total including the image and API traffic**, so excluded bytes do not hide real cost.
+
+Use [09-bundling.md](09-bundling.md) to compare a whole application first, minimal heavy-library splitting, vendor/app separation and broader feature layouts with equivalent production code over HTTP/1.1. Count the full import graph, CSS/preload requests, dependency waterfalls, connection reuse and upgrade-cache behavior. If fewer requests justify a combined build above the 30 KiB initial-byte target, report the measured tradeoff rather than silently redefining the budget. The chosen layout is not yet an achieved result.
 
 Do not set an arbitrary time-to-interactive promise without hardware/network measurements. Compare legacy and alternative on the same device, firmware, Wi-Fi conditions, meter data and browser. A faster browser render is different from reduced device work.
 

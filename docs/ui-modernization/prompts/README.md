@@ -11,6 +11,7 @@ Read repository instructions plus these files:
 - `docs/ui-modernization/07-decisions-and-progress.md`
 - `docs/ui-modernization/02-feature-parity.md`
 - `docs/ui-modernization/08-cache-and-firmware-support.md`
+- `docs/ui-modernization/09-bundling.md`
 - The current stage's referenced design documents and prior relevant handoffs.
 
 Check the actual source and working tree. If the source baseline has changed, reconcile affected contracts; do not repeat the entire investigation without cause. Preserve unrelated user edits. Follow the current conversation's authorization and any accepted changes to this plan.
