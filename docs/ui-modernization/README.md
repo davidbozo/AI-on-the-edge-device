@@ -13,6 +13,7 @@ Status: repository analysis and agreed direction; implementation has not started
 - Use Preact + TypeScript + Vite and target modern devices/browsers.
 - Minimize runtime dependencies and prioritize bundle size. Implement fairly straightforward features with browser APIs/small helpers; existing libraries are comparison baselines, not required choices. Ask the user when a dependency tradeoff is unclear, with concrete alternatives and measured cost.
 - Add CLI bundle-size analysis with the first foundation build, including a baseline, gzip/output/request reports and module attribution; keep diagnostic tools/reports out of SD-card assets.
+- Implement iteratively, one invoked prompt at a time. Treat the plan as a living guide: inspect relevant legacy code, ask about unclear behavior or tradeoffs, and update affected context/prompts after findings and discussion. Stage boundaries/order and proposed details may evolve while preserving current agreed requirements.
 - Start with a simple visual facelift and responsive layout while preserving familiar workflows. Broader page redesign follows the user's later review.
 - Keep the project primarily frontend, with focused firmware changes or added endpoints where needed. ETag support and improved cache policy, including `no-cache` revalidation, are required work.
 - A spare ESP32-CAM is available for validation; connection details and actual test results are still pending.
@@ -51,8 +52,9 @@ Improve firmware caching early through the dedicated stage 00b: HTML and mutable
 
 1. Review the design and record any changed preferences in [07-decisions-and-progress.md](07-decisions-and-progress.md).
 2. Start with [prompts/00-contracts-and-baseline.md](prompts/00-contracts-and-baseline.md).
-3. Run one numbered prompt per implementation conversation in the order specified in the work plan.
+3. Use one numbered prompt per implementation conversation, starting from the suggested sequence in the work plan. Adjust or split/combine stages when findings warrant it; keep dependencies and handoffs current.
 4. Each prompt reads [prompts/README.md](prompts/README.md), the shared context, and the preceding handoff. Each updates the progress document and its feature evidence before finishing.
 5. Keep hardware checks marked pending until performed on a real device. Browser mocks cannot establish firmware compatibility or ESP32 stability.
+6. When source behavior, implementation evidence or discussion changes an assumption, revise the affected design documents and remaining prompts. Follow the latest user direction and recorded decisions instead of forcing an obsolete plan detail.
 
 The prompts specify work for future turns; their presence does not start implementation now.

@@ -1,6 +1,6 @@
 # Shared instructions for implementation prompts
 
-Each numbered file is a ready-to-use prompt for one implementation conversation. Paste its fenced prompt into a new conversation with this repository open. Run them in the order in [06-work-plan.md](../06-work-plan.md). The planning turn itself does not execute them.
+Each numbered file is a ready-to-use starting prompt for one implementation conversation. Paste its fenced prompt into a new conversation with this repository open. Use the suggested sequence in [06-work-plan.md](../06-work-plan.md), adapting it when evidence or discussion changes the approach. The planning turn itself does not execute them.
 
 ## Context every stage must load
 
@@ -16,7 +16,15 @@ Read repository instructions plus these files:
 
 Check the actual source and working tree. If the source baseline has changed, reconcile affected contracts; do not repeat the entire investigation without cause. Preserve unrelated user edits. Follow the current conversation's authorization and any accepted changes to this plan.
 
-## Invariants
+## Iterative implementation
+
+Treat each invoked prompt as a useful iteration, not a frozen specification or an instruction to execute the entire roadmap. Inspect relevant legacy pages/handlers whenever behavior is unclear, a contract is missing or the proposed approach seems wrong. Source establishes what exists; the latest user discussion establishes desired behavior. Ask the user when intent, a meaningful tradeoff or apparently inconsistent behavior remains unclear instead of guessing or reproducing an accidental legacy defect.
+
+Adapt implementation details and stage boundaries/order where evidence makes a better approach clear, while preserving the current agreed requirements. Routine reversible adjustments within scope do not require confirmation merely because the document differs. For uncertain product/scope/dependency choices, give the concrete finding and options, ask, and continue independent work. Respect the existing ask-if-uncertain dependency rule.
+
+After a changed assumption or discussion, update the affected design/API/performance documents, remaining prompts, decisions and stage handoff so the next conversation does not inherit stale instructions. Distinguish user-accepted changes from proposals and source facts. Record the reason and validation impact; keep completed work/status honest. Current user direction and later recorded decisions take precedence over older prompt wording. Finish the current useful iteration and hand off; do not automatically run all remaining prompts.
+
+## Standing requirements and working rules
 
 - Keep the legacy root/default pages, workflows and existing API/integration clients intact. The accepted stack is Preact + TypeScript + Vite, targeting modern devices; preserve familiar interactions with a simple responsive facelift. Necessary small compatible firmware/API changes are allowed, and ETag/cache improvements are required. Source goes under the chosen isolated alternative directory (`web-ui/` proposed); generated output is staged separately.
 - Full parity is required for release. Early screens are checkpoints; no legacy iframe/link counts as a completed replacement feature.
@@ -31,6 +39,6 @@ Check the actual source and working tree. If the source baseline has changed, re
 
 ## Required stage output
 
-Update feature statuses in document 02 and stage state in document 07. Create `docs/ui-modernization/handoffs/NN-<stage>.md` with changed files, contract/architecture decisions, commands and actual results, gzip sizes/request counts when relevant, runtime dependency decisions (including alternatives and cost), unresolved issues, hardware checks and the next prompt. Treat fixture-only checks as `mock-verified`.
+Update feature statuses in document 02 and stage state in document 07. Create `docs/ui-modernization/handoffs/NN-<stage>.md` with changed files, contract/architecture decisions, commands and actual results, gzip sizes/request counts when relevant, runtime dependency decisions (including alternatives and cost), changed assumptions/discussion outcomes and affected plan/prompts, unresolved issues, hardware checks and the current next step. Treat fixture-only checks as `mock-verified`.
 
 Conclude with a concise account of what changed, what was checked, material limits and the next stage. Do not create commits, publish, push or deploy unless the current conversation requests it. Document concrete evidence, contracts, compatibility and resource impact for needed firmware changes and proceed within the accepted scope; do not ask again merely because they touch firmware. A spare ESP32-CAM exists, but its connection and actual test results are still pending.

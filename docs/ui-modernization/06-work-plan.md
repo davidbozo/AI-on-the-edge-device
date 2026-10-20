@@ -1,6 +1,6 @@
 # Implementation stages
 
-All stages are planned. Preact/TypeScript/Vite, modern-device support and a simple facelift with familiar workflows are accepted. Full parity remains the release condition. Run stages sequentially so later prompts can rely on committed or clearly recorded earlier work. No sub-agents or parallel agent execution are required by this plan.
+All stages are planned. Preact/TypeScript/Vite, modern-device support and a simple facelift with familiar workflows are accepted. Full parity remains the release condition. Work iteratively, one invoked prompt at a time; the sequence below is a starting guide. Check relevant legacy code and ask when something does not make sense. Findings and discussion may change implementation details, boundaries or ordering; update the affected context/prompts and preserve real prerequisites. No sub-agents or parallel agent execution are required by this plan.
 
 | Stage and prompt | Depends on | Deliverable | Exit criterion |
 | --- | --- | --- | --- |
@@ -20,18 +20,18 @@ All stages are planned. Preact/TypeScript/Vite, modern-device support and a simp
 | [12 Packaging and coexistence](prompts/12-packaging-and-coexistence.md) | 11 | Build/CI integration, both-UI packages, cache validator metadata, install/reinstall/rollback docs | F31,F32 package/cache checks; legacy root/config/help/version generation preserved |
 | [13 Full parity qualification](prompts/13-parity-and-device-qualification.md) | 12 | Final action matrix, browser/device/performance evidence and remaining fixes | No required parity gaps; real-device checks pass or release remains explicitly pending |
 
-Stage 04's full data-file browser and stage 09's shared file tooling may share a small adapter. Do not implement two file managers. Stage 05 may use stage 02's transport but must remain testable without rendering the app. The table order is intentional even when some dependencies would allow independent coding.
+Stage 04's full data-file browser and stage 09's shared file tooling may share a small adapter. Do not implement two file managers. Stage 05 may use stage 02's transport but should remain testable without rendering the app. Dependencies describe the current design assumptions, not an immutable execution schedule: for example, isolated fixture/frontend work need not wait for hardware-only verification. Revise sequencing and acceptance details when evidence or discussion changes them, and record what still needs verification before integration/release.
 
 ## Stage completion and handoff
 
 Every stage:
 
-1. Read this plan, the progress ledger, prompt and relevant source. Recheck local repository instructions and existing work.
-2. Work within the stage and fix issues necessary for its deliverable. Necessary small compatible firmware/API changes are authorized; record their contracts, tests and resource impact rather than requesting approval again solely because firmware is involved. Broad backend/product redesign remains outside scope.
+1. Read this plan, the progress ledger, current prompt and relevant source. Recheck local repository instructions and existing work; later user direction/decisions supersede old prompt details. Inspect legacy code where needed before filling gaps in assumptions.
+2. Complete the current iteration's useful deliverable, adapting details or stage boundaries when evidence warrants it. Ask about unresolved intent, confusing behavior or meaningful tradeoffs, and keep independent work moving. Necessary small compatible firmware/API changes are authorized; record their contracts, tests and resource impact rather than requesting approval again solely because firmware is involved. Broad backend/product redesign remains outside scope unless discussion changes that requirement.
 3. Run appropriate build/contract/browser checks. Hardware operations are separate from a mock test; report exact evidence and pending work.
 4. Update feature statuses without treating fallback links or mocks as device verification.
 5. Add a stage handoff under `docs/ui-modernization/handoffs/NN-*.md`, containing changed files, contract and runtime-dependency decisions (native/custom alternatives, feature fit and measured cost), commands/results, bundle sizes, limitations, device checks and the precise next step. Ask the user before resolving an unclear dependency tradeoff; routine straightforward native work can continue.
-6. Update [07-decisions-and-progress.md](07-decisions-and-progress.md), linking that handoff. Leave the working tree reviewable. Do not create commits/PRs/pushes unless separately requested.
+6. Update [07-decisions-and-progress.md](07-decisions-and-progress.md), linking that handoff; revise affected context documents and remaining prompts after findings/discussion, noting accepted changes vs proposals. Leave the working tree reviewable and state the next iteration. Do not automatically execute the remaining roadmap or create commits/PRs/pushes unless requested.
 
 ## Decision points
 
